@@ -1,0 +1,11 @@
+a = int(input("enter your marks:"))
+if a>=75:
+    print("result=A")
+elif a>=65:
+    print("result=B")
+elif a>=55:
+    print("result=C")
+elif a>=35:
+    print("result=S")
+elif a>=0:
+    print("result=F")
