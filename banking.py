@@ -1,45 +1,94 @@
-#file=open("sampil.txt","r")
-#print(file.read())
-balance=500000
-print("======banking=======")
-start =input("creat acount :select 1/visit acount: select 2 : ")
-if start == 1:
-    
-elif start == 2:
-    user_name =input("enter your user_name: ")
-    password =input("enter your password")
-    if user_name == "danu" and password =="1234":
+print("======(❁´◡`❁) Welcome to Banking (❁´◡`❁)======")
+start = input("Create account: select 1 / Visit account: select 2 : ")
+
+# ========================= create account ============================
+def create_account():
+    account_num = 1009  
+    balance = int(input("Enter your balance amount: "))
+    name = input("Enter your name: ")
+    password = input("Enter your password: ")
+
+    with open("accounts.txt", "a") as file:
+        file.write(f"{account_num},{name},{password},{balance}\n")
+
+    print("Account created and saved successfully!")
+
+# ========================= load account ============================================
+def load_accounts():
+    accounts = {}
+    try:
+        with open("accounts.txt", "r") as file:
+            for line in file:
+                parts = line.strip().split(",")
+                if len(parts) == 4:
+                    account_num, name, password, balance = parts
+                    accounts[name] = {"password": password, "balance": int(balance)}
+                else:
+                    print("Skipping malformed line:", line.strip())
+    except :
+        print("Accounts file not found!")
+    return accounts
+
+
+# ========================= withdraw =================================
+def withdraw(accounts, user_name):
+    amount = int(input("Enter your withdraw amount: "))
+
+    if amount <= accounts[user_name]["balance"]:
+        accounts[user_name]["balance"] -= amount
+        print("Transaction successful!")
+        print("Your new balance is:", accounts[user_name]["balance"])
+        save_accounts(accounts)
+    else:
+        print("Insufficient balance! Please check the amount.")
+
+# ========================= deposit =================================
+def deposit(accounts, user_name):
+    amount = int(input("Enter your deposit amount: "))
+
+    if amount > 0:
+        accounts[user_name]["balance"] += amount
+        print("Deposit successful!")
+        print("Your new balance is:", accounts[user_name]["balance"])
+        save_accounts(accounts)
+    else:
+        print("Invalid deposit amount!")
+
+# ========================= save account ============================
+def save_accounts(accounts):
+    with open("accounts.txt", "w") as file:
+        for name, data in accounts.items():
+            file.write(f"1009,{name},{data['password']},{data['balance']}\n")
+
+# ========================= code for app ===============================
+if start == "1":
+    create_account()
+elif start == "2":
+    accounts = load_accounts()
+    user_name = input("Enter your username: ")
+    password = input("Enter your password: ")
+
+    if user_name in accounts and accounts[user_name]["password"] == password:
         print("Login successful!")
-        print("select the option you like")
-        option=input("/Check Balance /Withdraw Money /Deposit Money /Exit :")
-        
-        if option == "Check Balance":
-            print(balance)
-    #==================================================
-        elif option == "Withdraw Money":
-            amount_1=int(input("enter your withdraw amount: "))
-            if amount_1 <= balance :
-                balance = balance-amount_1
-                print("it is your new balance : ",balance)
-                print("it is your withdraw amoount : ",amount_1)
-
-            else:
-                print("chek your withdraw amount!, it is greater than your balance")
-    #==================================================
-
-        elif   option == "Deposit Money":
-            amount_2 = int(input("enter your deposit amount : "))
-            if amount_2 > 0 :
-                balance = balance + amount_2
-                print("it is your new balance : " ,balance)
-                print("it is your Deposit amoount : ",amount_2)
-                
+        while True:
+            option = input("\nSelect an option:\n"
+                           "Check Balance (c)\n"
+                           "Withdraw Money (w)\n"
+                           "Deposit Money (d)\n"
+                           "Exit (e): ").lower()
             
+            if option == "c":
+                print("Your balance is:", accounts[user_name]["balance"])
+            elif option == "w":
+                withdraw(accounts, user_name)
+            elif option == "d":
+                deposit(accounts, user_name)
+            elif option == "e":
+                print("Thank you for use banking!")
+                break
             else:
-                print("chek your Deposit amount!, it is lower than 0 ")
-    #=====================================================
-        elif option == "exit":
-            pass
-
+                print("Invalid option. Please try again.")
+    else:
+        print("Invalid username or password!")
 else:
-    print("select the crect option!")
+    print("Please select a correct option!")
