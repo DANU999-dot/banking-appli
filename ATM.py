@@ -30,3 +30,26 @@ if a == "danu" and b == "1234":
 #===========================================================================
 else:
     print("Too many failed attempts. Exiting program")
+
+#============================================
+from turtle import *
+bgcolor("black")
+color("white")
+title("Danu")
+begin_fill()
+pensize(3)
+left(50)
+forward(133)
+circle(50, 200)
+right(140)
+circle(50, 200)
+forward(133)
+end_fill()
+
+penup()
+goto(0, -50)
+pendown()
+color("white")
+write("I Love You", align="center", font=("Arial", 20, "bold"))
+hideturtle()
+done()
