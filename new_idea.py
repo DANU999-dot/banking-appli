@@ -1,6 +1,16 @@
 print("======(❁´◡`❁) Welcome to Banking (❁´◡`❁)======")
 print("Create account: select 1 :")
-print("login account: select 2:")
+print("login account: select 2:")\
+#============================creat history============================================
+
+def history():
+    try:
+        with open("history.txt", "r") as file:
+            print("Transaction History:")
+            for line in file:
+                print(line.strip())
+    except FileNotFoundError:
+        print("History file not found!")
 
 
 # ========================= create account ===================================================
@@ -14,7 +24,7 @@ def create_account():
     password = input("enter your password: ")
 
     with open("accounts.txt", "a") as file:
-        file.write(f"{account_num},{balance}\n")
+        file.write(f"{account_num},{balance}\n")                                                                                                                                                                           
 
     with open("password.txt","a") as file:
         file.write(f"{account_num},{password}\n")
@@ -22,10 +32,29 @@ def create_account():
     with open ("user_name.txt","a") as file:
         file.write(f"{name},{password}\n")
 
-    list=[account_num]
+    print(f"acount_num is {account_num} your account saved succsesfully!😎")
+
 
 #=========================load password========================================
-def load_password():
+
+def load_accounts():
+    accounts = {}
+    try:
+        with open("accounts.txt", "r") as file:
+            for line in file:
+                parts = line.strip().split(",")
+               
+                if len(parts) == 4:
+                    account_num, name, password, balance = parts
+                    accounts[name] = {"account_num": account_num, "password":password, "balance": int(balance)}
+                else:
+                    print("Skipping malformed line:", line.strip())
+    
+    except FileNotFoundError:
+        print("Accounts file not found!")
+    
+    return accounts
+'''def load_password():
     passwords = {}
     try:
         with open("password.txt", "r") as file:
@@ -57,7 +86,7 @@ def load_user_name():
     except :
         print("user_name file not found!")
     
-    return user_name
+    return user_name'''
 # ========================= save account ====================================
 def save_new_updates(accounts,account_num):
     with open("accounts.txt", "w") as file:
@@ -103,17 +132,18 @@ def deposit(accounts, user_name, account_num):
 start = input(":")
 if start == "1":
    create_account()
-   print(f"acount_num is {account_num} your account saved succsesfully!😎")
+
 
 
 elif start == "2":
-    accounts = load_user_name()
-    fuck=load_password()
+    import getpass
+    accounts = load_accounts()
     print("(((φ(◎ロ◎;)φ)))")
     user_name = input("Enter your username: ")
-    password = input("Enter your password: ")
+    password = getpass.getpass("Enter your password: ")
 
-    if True :
+  #  if True :
+    if user_name in accounts and accounts[user_name]["password"] == password:
    # if user_name in accounts and word.get(password) == password:
 
         print("Login successful!😎")
@@ -124,6 +154,8 @@ elif start == "2":
                            "Withdraw Money 🤑(w)\n"
                            "\n"
                            "Deposit Money💸 (d)\n"
+                           "\n"
+                           "transaction history (t)"
                            "\n"
                            "Exit 👋(e): ")
             option=input(":")
@@ -136,7 +168,9 @@ elif start == "2":
             
             elif option == "d":
                 deposit('accounts', 'user_name','account_num')
-            
+            elif option == "t":
+                history()
+                 
             elif option == "e":
                 print("Thank you for use banking!👋")
                 break
